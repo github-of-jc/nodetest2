@@ -33,9 +33,12 @@ router.post('/addtopic', function(req, res) {
 
 /* TODO POST to deletetopic. THISSS */
 router.post('/deletetopic', function(req, res){
+	console.log("in deletetopic")
+
 	var db = req.db;
 	var collection = db.get('topiclist');
-	collection.deleteOne(req.body, function(err, result){
+	console.log(req.body);
+	collection.remove(req.body, function(err, result){
 		res.send(
 			(err === null) ? {msg: '' } : {msg: err}
 		);

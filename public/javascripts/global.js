@@ -13,6 +13,8 @@ $(document).ready(function() {
   // delete user link click
   $('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
 
+  $('#topicList table tbody').on('click', 'td a.linkdeletetopic', deleteTopic);
+
   // Add User button click
   $('#btnAddUser').on('click', addUser);
   // Add Topic button click
@@ -62,6 +64,7 @@ function populateTopicTable() {
       userTopicData = data;
       tableContent += '<tr>';
       tableContent += '<td>' + this.topic + '</td>';
+      tableContent += '<td><a href="#" class="linkdeletetopic" rel="' + this._id + '">delete</a></td>';
       tableContent += '</tr>';
     });
 
@@ -185,6 +188,52 @@ function deleteUser(event) {
 
         // Update the table
         populateTable();
+
+      }
+      else {
+
+        // If something goes wrong, alert the error message that our service returned
+        alert('Error: ' + response.msg);
+
+      }
+    });
+  }
+
+};
+
+// Delete User
+function deleteTopic(event) {
+  event.preventDefault();
+
+  // Super basic validation - increase errorCount variable if any fields are blank
+  var errorCount = 0;
+  // $('#addUser input').each(function(index, val) {
+  //   if($(this).val() === '') { errorCount++; }
+  // });
+
+  // Check and make sure errorCount's still at zero
+  if(errorCount === 0) {
+    console.log(errorCount);
+
+    // If it is, compile all user info into one object
+    var deleteTopicId = { '_id' : $(this).attr('rel')};
+
+
+    console.log(deleteTopicId);
+
+    // Use AJAX to post the object to our adduser service
+    $.ajax({
+      type: 'POST',
+      data: deleteTopicId,
+      url: '/users/deleteTopic',
+      dataType: 'JSON'
+    }).done(function( response ) {
+
+      // Check for successful (blank) response
+      if (response.msg === '') {
+
+        // Update the table
+        populateTopicTable();
 
       }
       else {
