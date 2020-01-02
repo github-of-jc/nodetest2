@@ -10,6 +10,27 @@ router.get('/userlist', function(req, res) {
   });
 });
 
+
+/* GET topiclist. */
+router.get('/topiclist', function(req, res) {
+  var db = req.db;
+  var collection = db.get('topiclist');
+  collection.find({},{},function(e,docs){
+    res.json(docs);
+  });
+});
+
+/* POST to addtopic. THISSS */
+router.post('/addTopic', function(req, res) {
+  var db = req.db;
+  var collection = db.get('topiclist');
+  collection.insert(req.body, function(err, result){
+    res.send(
+      (err === null) ? { msg: '' } : { msg: err }
+    );
+  });
+});
+
 /* POST to adduser. THISSS */
 router.post('/adduser', function(req, res) {
   var db = req.db;

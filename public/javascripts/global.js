@@ -1,16 +1,20 @@
 // Userlist data array for filling in info box
 var userListData = [];
+var userTopicData = [];
 
 // DOM Ready =============================================================
 $(document).ready(function() {
 
   // Populate the user table on initial page load
-  populateTable();
+  //populateTable();
+  populateTopicTable();
   // Username link click
   $('#userList table tbody').on('click', 'td a.linkshowuser', showUserInfo);
 
   // Add User button click
   $('#btnAddUser').on('click', addUser);
+  // Add Topic button click
+  $('#btnAddTopic').on('click', addTopic);
 
 });
 
@@ -41,6 +45,29 @@ function populateTable() {
   });
 };
 
+// Fill table with data
+function populateTopicTable() {
+
+  // Empty content string
+  var tableContent = '';
+
+  // jQuery AJAX call for JSON
+  $.getJSON( '/users/topiclist', function( data ) {
+
+    // For each item in our JSON, add a table row and cells to the content string
+    $.each(data, function(){
+      // Stick our user data array into a userlist variable in the global object
+      userTopicData = data;
+      tableContent += '<tr>';
+      tableContent += '<td>' + this.topic + '</td>';
+      tableContent += '</tr>';
+    });
+
+    // Inject the whole content string into our existing HTML table
+    $('#topicList table tbody').html(tableContent);
+  });
+};
+
 // Show User Info
 function showUserInfo(event) {
 
@@ -62,6 +89,8 @@ function showUserInfo(event) {
   $('#userInfoGender').text(thisUserObject.gender);
   $('#userInfoLocation').text(thisUserObject.location);
 };
+
+
 
 // Add User
 function addUser(event) {
@@ -102,6 +131,57 @@ function addUser(event) {
 
         // Update the table
         populateTable();
+
+      }
+      else {
+
+        // If something goes wrong, alert the error message that our service returned
+        alert('Error: ' + response.msg);
+
+      }
+    });
+  }
+  else {
+    // If errorCount is more than 0, error out
+    alert('Please fill in all fields');
+    return false;
+  }
+};
+
+// Add Topic
+function addTopic(event) {
+  event.preventDefault();
+
+  // Super basic validation - increase errorCount variable if any fields are blank
+  var errorCount = 0;
+  $('#addTopic input').each(function(index, val) {
+    if($(this).val() === '') { errorCount++; }
+  });
+
+  // Check and make sure errorCount's still at zero
+  if(errorCount === 0) {
+
+    // If it is, compile all user info into one object
+    var newTopic = {
+      'topic': $('#addTopic fieldset input#inputTopic').val()
+    }
+
+    // Use AJAX to post the object to our adduser service
+    $.ajax({
+      type: 'POST',
+      data: newTopic,
+      url: '/users/addtopic',
+      dataType: 'JSON'
+    }).done(function( response ) {
+
+      // Check for successful (blank) response
+      if (response.msg === '') {
+
+        // Clear the form inputs
+        $('#addTopic fieldset input').val('');
+
+        // Update the table
+        populateTopicTable();
 
       }
       else {
