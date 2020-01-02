@@ -17,3 +17,7 @@ and a display on the right that lists "currently following"
 
 9:38 pm
 oh i need a delete topic button for each of the topics...
+
+20200102
+
+adding the delete topics button...

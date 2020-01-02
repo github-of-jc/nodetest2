@@ -6,10 +6,12 @@ var userTopicData = [];
 $(document).ready(function() {
 
   // Populate the user table on initial page load
-  //populateTable();
+  populateTable();
   populateTopicTable();
   // Username link click
   $('#userList table tbody').on('click', 'td a.linkshowuser', showUserInfo);
+  // delete user link click
+  $('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
 
   // Add User button click
   $('#btnAddUser').on('click', addUser);
@@ -76,6 +78,8 @@ function showUserInfo(event) {
 
   // Retrieve username from link rel attribute
   var thisUserName = $(this).attr('rel');
+  console.log(this)
+  console.log(thisUserName)
 
   // Get Index of object based on id value
   var arrayPosition = userListData.map(function(arrayItem) { return arrayItem.username; }).indexOf(thisUserName);
@@ -148,6 +152,52 @@ function addUser(event) {
   }
 };
 
+// Delete User
+function deleteUser(event) {
+  event.preventDefault();
+
+  // Super basic validation - increase errorCount variable if any fields are blank
+  var errorCount = 0;
+  // $('#addUser input').each(function(index, val) {
+  //   if($(this).val() === '') { errorCount++; }
+  // });
+
+  // Check and make sure errorCount's still at zero
+  if(errorCount === 0) {
+    console.log(errorCount);
+
+    // If it is, compile all user info into one object
+    var deleteUserId= { '_id' : $(this).attr('rel')};
+
+
+    console.log(deleteUserId);
+
+    // Use AJAX to post the object to our adduser service
+    $.ajax({
+      type: 'POST',
+      data: deleteUserId,
+      url: '/users/deleteuser',
+      dataType: 'JSON'
+    }).done(function( response ) {
+
+      // Check for successful (blank) response
+      if (response.msg === '') {
+
+        // Update the table
+        populateTable();
+
+      }
+      else {
+
+        // If something goes wrong, alert the error message that our service returned
+        alert('Error: ' + response.msg);
+
+      }
+    });
+  }
+
+};
+
 // Add Topic
 function addTopic(event) {
   event.preventDefault();
@@ -166,7 +216,7 @@ function addTopic(event) {
       'topic': $('#addTopic fieldset input#inputTopic').val()
     }
 
-    // Use AJAX to post the object to our adduser service
+    // Use AJAX to post the object to our addtopic service
     $.ajax({
       type: 'POST',
       data: newTopic,
@@ -198,3 +248,4 @@ function addTopic(event) {
     return false;
   }
 };
+

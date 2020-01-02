@@ -21,7 +21,7 @@ router.get('/topiclist', function(req, res) {
 });
 
 /* POST to addtopic. THISSS */
-router.post('/addTopic', function(req, res) {
+router.post('/addtopic', function(req, res) {
   var db = req.db;
   var collection = db.get('topiclist');
   collection.insert(req.body, function(err, result){
@@ -31,9 +31,34 @@ router.post('/addTopic', function(req, res) {
   });
 });
 
+/* TODO POST to deletetopic. THISSS */
+router.post('/deletetopic', function(req, res){
+	var db = req.db;
+	var collection = db.get('topiclist');
+	collection.deleteOne(req.body, function(err, result){
+		res.send(
+			(err === null) ? {msg: '' } : {msg: err}
+		);
+	});
+});
+
+/* TODO POST to deletetopic. THISSS */
+router.post('/deleteuser', function(req, res){
+	console.log("in deleteuser")
+	var db = req.db;
+	var collection = db.get('userlist');
+	console.log(req.body);
+	collection.remove(req.body, function(err, result){
+		res.send(
+			(err === null) ? {msg: '' } : {msg: err}
+		);
+	});
+});
+
 /* POST to adduser. THISSS */
 router.post('/adduser', function(req, res) {
   var db = req.db;
+  console.log(req.body);
   var collection = db.get('userlist');
   collection.insert(req.body, function(err, result){
     res.send(
