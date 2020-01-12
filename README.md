@@ -34,3 +34,8 @@ i want the "do a like" button to sends a signal to db, then retweet will get the
 
 first add the twitter page first 
 11:22am used twitter publish to add a live twitter like page
+
+##20200112
+
+i need a clear way to store the data
+for now, need to store all the fields of the action into a table is good...
