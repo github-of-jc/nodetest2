@@ -39,3 +39,7 @@ first add the twitter page first
 
 i need a clear way to store the data
 for now, need to store all the fields of the action into a table is good...
+
+##20200113
+just need for it to run non-stop locally and put it in the local mongodb for now...
+let global.js call the fav_tweet script
